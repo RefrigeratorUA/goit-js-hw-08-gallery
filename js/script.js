@@ -10,7 +10,8 @@ const refs = {
 
 let currentItemModal;
 
-refs.galleryList.insertAdjacentHTML("beforeend", creatGalleryMarkup(gallery));
+// refs.galleryList.insertAdjacentHTML("beforeend", creatGalleryMarkup(gallery));
+refs.galleryList.innerHTML = creatGalleryMarkup(gallery);
 
 refs.galleryList.addEventListener("click", onClickGalleryItem);
 
@@ -65,30 +66,12 @@ function hideModal(e) {
 }
 
 function onKeyDown(e) {
-  if (e.code === "Escape") {
-    console.log("Нажали", e.code, "=> Закрытие модального окна");
-    return hideModal();
-  }
+  if (e.code === "Escape") return hideModal();
 
   const currentListItemRef = currentItemModal.closest("li");
 
-  if (e.code === "ArrowLeft") {
-    console.log("Нажали влево => Предыдущее изображение");
-    const leftItemModal = currentListItemRef.previousSibling
-      ? currentListItemRef.previousSibling
-      : refs.galleryList.lastChild;
-
-    currentItemModal = leftItemModal.querySelector("img");
-    changeImgAttributes(currentItemModal);
-  } else if (e.code === "ArrowRight") {
-    console.log("Нажали вправо => Следующее изображение");
-    const rightItemModal = currentListItemRef.nextSibling
-      ? currentListItemRef.nextSibling
-      : refs.galleryList.firstChild;
-
-    currentItemModal = rightItemModal.querySelector("img");
-    changeImgAttributes(currentItemModal);
-  }
+  if (e.code === "ArrowLeft") onPressArrowLeft(currentListItemRef);
+  else if (e.code === "ArrowRight") onPressArrowRight(currentListItemRef);
 }
 
 function changeImgAttributes(imageRef) {
@@ -99,4 +82,22 @@ function changeImgAttributes(imageRef) {
     refs.galleryImage.src = "";
     refs.galleryImage.alt = "";
   }
+}
+
+function onPressArrowLeft(parentListItemRef) {
+  const leftItemModal = parentListItemRef.previousSibling
+    ? parentListItemRef.previousSibling
+    : refs.galleryList.lastChild;
+
+  currentItemModal = leftItemModal.querySelector("img");
+  changeImgAttributes(currentItemModal);
+}
+
+function onPressArrowRight(parentListItemRef) {
+  const rightItemModal = parentListItemRef.nextSibling
+    ? parentListItemRef.nextSibling
+    : refs.galleryList.firstChild;
+
+  currentItemModal = rightItemModal.querySelector("img");
+  changeImgAttributes(currentItemModal);
 }
